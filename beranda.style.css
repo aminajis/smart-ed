@@ -1,0 +1,82 @@
+/* Update Sidebar biar pas UI/UX */
+.sidebar {
+    width: 260px;
+    background: white;
+    border-right: 1px solid #e2e8f0;
+    padding: 30px 0; /* Padding atas bawah */
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-brand {
+    padding: 0 25px 30px 25px;
+}
+
+.nav-item {
+    padding: 12px 25px;
+    margin: 4px 15px;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.nav-item.active {
+    background: #f1f5f9;
+    color: #2B5B7C;
+    font-weight: 700;
+}
+
+/* Card Stats Update */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.card {
+    background: white;
+    padding: 24px;
+    border-radius: 16px; /* Lebih rounded */
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+/* Status Tag Warna-Warni */
+.status-tag {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+.status-tag.warning { background: #fef3c7; color: #92400e; }
+.status-tag.expired { background: #ffe4e6; color: #be123c; }
+
+/* Item List detail */
+.priority-item {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 20px 25px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.btn-action.dark {
+    background: #1e293b; /* Warna gelap sesuai UI */
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+}

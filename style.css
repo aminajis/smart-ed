@@ -1,0 +1,229 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #f4f7f6;
+}
+
+.login-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Panel Kiri (Biru sesuai Figma) */
+/* Panel Kiri (Biru) biar kontennya ketengah */
+.left-panel {
+    flex: 1;
+    background-color: #2c5e7e; 
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Ini biar teks Akurasi Data ketengah vertikal */
+    align-items: flex-start; /* Biar rata kiri tapi tetep ada padding */
+    padding: 80px; /* Padding digedein dikit biar lega */
+    position: relative; /* Buat patokan brand-top */
+}
+
+/* Brand Top (Logo) dipaksa ke pojok atas */
+.brand-top {
+    position: absolute;
+    top: 60px;
+    left: 80px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-img {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+}
+
+/* Teks Branding biar lebih tebel & berisi */
+.branding-text h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.branding-text p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8); /* Putih agak transparan biar estetik */
+    max-width: 400px; /* Biar teksnya nggak kepanjangan ke kanan */
+}
+
+/* Panel Kanan (Putih Form) */
+.right-panel {
+    flex: 1.2;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.login-box h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.forgot-link, .footer-text a {
+    color: #2c5e7e;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    background-color: #2c5e7e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-login:hover {
+    background-color: #1e4258;
+}
+
+.footer-text {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 14px;
+    color: #666;
+}
+
+/* Layout Dua Kolom untuk Register */
+.form-row {
+    display: flex;
+    gap: 20px; /* Jarak antara input kiri dan kanan */
+    margin-bottom: 15px;
+}
+
+.form-row .input-group {
+    flex: 1; /* Biar ukurannya sama rata */
+    margin-bottom: 0; /* Override margin bawah karena sudah diatur form-row */
+}
+
+/* Style khusus untuk dropdown Select */
+.custom-select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    color: #666;
+    cursor: pointer;
+}
+
+/* Supaya box register bisa lebih lebar kalau butuh */
+.signin-box {
+    max-width: 600px; /* Lebih lebar dari login box biasa */
+}
+
+/* Responsive: Kalau layar HP, jadi satu kolom lagi */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #f4f7f9;
+    color: #333;
+}
+
+.login-container {
+    display: flex;
+    height: 100vh;
+}
+
+.left-panel {
+    background-color: #2B5B7C;
+    color: white;
+    width: 35%;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+.brand-top {
+    position: absolute;
+    top: 60px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-img {
+    width: 35px;
+    height: 35px;
+    background-color: white;
+    border-radius: 6px;
+}
+

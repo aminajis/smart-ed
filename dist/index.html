@@ -1,0 +1,44 @@
+<?php 
+include 'includes/header.php'; // Ini udah bawa Sidebar & Navbar paten
+?>
+
+<div class="content-wrapper">
+    <div class="content-wrapper-custom"> <h2>Ringkasan Operasional</h2>
+        <p class="subtitle">Status inventaris terkini untuk Apotek Bintang Surya.</p>
+
+        <div class="stats-grid">
+            <div class="card">
+                <label>TOTAL STOK ITEMS</label>
+                <div class="card-value">1,284</div>
+            </div>
+            <div class="card">
+                <label>MENDEKATI KADALUARSA</label>
+                <div class="card-value">42</div>
+                <span class="status-tag warning">TINDAKAN DIPERLUKAN</span>
+            </div>
+            <div class="card">
+                <label>STOK KADALUARSA</label>
+                <div class="card-value" style="color: #be123c;">8</div>
+                <span class="status-tag expired">KRITIS</span>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <h3>Peringatan Prioritas Tinggi</h3>
+            <a href="#" class="view-all">Lihat Semua &rarr;</a>
+        </div>
+
+        <div class="priority-list">
+            <div class="priority-item">
+                <div class="col-main">
+                    <span class="label">NAMA OBAT</span>
+                    <strong>Amoxicillin 500mg</strong>
+                </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+<?php 
+include 'includes/footer.php'; // Tutup semua tag
+?>
