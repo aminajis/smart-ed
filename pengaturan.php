@@ -14,12 +14,14 @@ $create_setting_profile = "CREATE TABLE IF NOT EXISTS setting_profile (
     alamat_apotek TEXT,
     password_akun VARCHAR(255) DEFAULT '',
     stok_min INT DEFAULT 20,
-    ed_alert INT DEFAULT 3
+    ed_alert INT DEFAULT 3,
+    last_email_sent DATETIME NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
 if (!mysqli_query($conn, $create_setting_profile)) {
     $bootstrap_error = 'Gagal menyiapkan tabel setting_profile: ' . mysqli_error($conn);
 } else {
     mysqli_query($conn, 'INSERT IGNORE INTO setting_profile (id) VALUES (1)');
+    mysqli_query($conn, 'ALTER TABLE setting_profile ADD COLUMN IF NOT EXISTS last_email_sent DATETIME NULL');
 }
 
 include __DIR__ . '/includes/header.php';

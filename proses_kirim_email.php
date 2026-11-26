@@ -1,11 +1,14 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Panggil library PHPMailer
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/config/mail.php';
 require_once __DIR__ . '/PHPMailer/Exception.php';
 require_once __DIR__ . '/PHPMailer/PHPMailer.php';
 require_once __DIR__ . '/PHPMailer/SMTP.php';
@@ -20,6 +23,7 @@ mysqli_query($conn, "CREATE TABLE IF NOT EXISTS setting_profile (
     password_akun VARCHAR(255) DEFAULT '', stok_min INT DEFAULT 20, ed_alert INT DEFAULT 3
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 mysqli_query($conn, 'INSERT IGNORE INTO setting_profile (id) VALUES (1)');
+mysqli_query($conn, 'ALTER TABLE setting_profile ADD COLUMN IF NOT EXISTS last_email_sent DATETIME NULL');
 
 // Ambil pengaturan profil
 $profile = mysqli_fetch_assoc(mysqli_query($conn, 'SELECT email, nama_apotek, ed_alert FROM setting_profile WHERE id=1')) ?: [];
@@ -28,6 +32,8 @@ $nama_apotek = $profile['nama_apotek'] ?: 'Apotek Bintang Surya';
 $recipient_profile = trim($profile['email'] ?? '');
 
 $mail = new PHPMailer(true);
+$email_delivery_silent = $email_delivery_silent ?? false;
+$email_send_success = false;
 
 try {
     // ==========================================
@@ -36,10 +42,10 @@ try {
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
-    $mail->Username = 'molpyciamis@gmail.com';
-    $mail->Password = 'luhbinhoxdrhsekw';
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-    $mail->Port = 465;
+    $mail->Username = $smtp_user;
+    $mail->Password = $smtp_pass;
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port = 587;
     $mail->SMTPOptions = [
         'ssl' => [
             'allow_self_signed' => true,
@@ -48,30 +54,13 @@ try {
         ],
     ];
 
-    $mail->setFrom('molpyciamis@gmail.com', 'Sistem SMART ED');
+    $mail->setFrom($smtp_user, 'SMART-ED Apotek');
 
-    // Tambahkan penerima dari setting_profile
-    $added_recipients = [];
-    if ($recipient_profile !== '') {
-        $mail->addAddress($recipient_profile, $nama_apotek);
-        $added_recipients[strtolower($recipient_profile)] = true;
+    if ($recipient_profile === '') {
+        throw new Exception('Alamat email penerima belum tersedia pada setting_profile email (id=1).');
     }
 
-    // Tambahkan semua pengguna dari tabel users
-    $result_users = mysqli_query($conn, "SELECT email, nama_lengkap FROM users WHERE email IS NOT NULL AND TRIM(email) <> ''");
-    while ($result_users && ($user = mysqli_fetch_assoc($result_users))) {
-        $email = trim($user['email']);
-        $key = strtolower($email);
-        if ($email !== '' && !isset($added_recipients[$key])) {
-            $mail->addAddress($email, $user['nama_lengkap'] ?: 'Pengguna SMART ED');
-            $added_recipients[$key] = true;
-        }
-    }
-
-    // Pastikan setidaknya ada satu penerima
-    if (empty($added_recipients)) {
-        throw new Exception('Alamat email penerima belum tersedia di setting_profile atau users.');
-    }
+    $mail->addAddress($recipient_profile, $nama_apotek);
 
     // Ambil data obat yang mendekati masa kadaluarsa
     $stmt = mysqli_prepare($conn, "SELECT nama_obat, no_batch, sisa_stok, expired, lokasi
@@ -116,12 +105,33 @@ try {
 
     // Kirim email
     $mail->send();
-    header('Location: /smart-ed/pengaturan.php?tab=notifikasi&pesan=email_sukses');
-    exit;
+    $sent_at = date('Y-m-d H:i:s');
+    $stmt_sent = mysqli_prepare($conn, 'UPDATE setting_profile SET last_email_sent=? WHERE id=1');
+    mysqli_stmt_bind_param($stmt_sent, 's', $sent_at);
+    mysqli_stmt_execute($stmt_sent);
+    $email_send_success = true;
 
-} catch (Exception $e) {
-    $_SESSION['email_error'] = trim($mail->ErrorInfo ?: $e->getMessage());
-    header('Location: /smart-ed/pengaturan.php?tab=notifikasi&pesan=email_gagal');
-    exit;
+    if ($email_delivery_silent) {
+        // Tidak ada redirect atau output untuk pemanggil otomatis/header.
+    } elseif (PHP_SAPI === 'cli') {
+        echo "Email laporan ED berhasil dikirim.\n";
+    } else {
+        header('Location: /smart-ed/pengaturan.php?tab=notifikasi&pesan=email_sukses');
+        exit;
+    }
+
+} catch (\Throwable $e) {
+    $error_message = trim($mail->ErrorInfo ?: $e->getMessage());
+
+    if (!$email_delivery_silent) {
+        if (PHP_SAPI === 'cli') {
+            fwrite(STDERR, 'Email laporan ED gagal dikirim: ' . $error_message . "\n");
+            exit(1);
+        }
+
+        $_SESSION['email_error'] = $error_message;
+        header('Location: /smart-ed/pengaturan.php?tab=notifikasi&pesan=email_gagal');
+        exit;
+    }
 }
 ?>

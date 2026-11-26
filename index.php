@@ -1,6 +1,7 @@
 <?php 
 require_once __DIR__ . '/config/database.php';
 include __DIR__ . '/includes/header.php';
+require_once __DIR__ . '/includes/auto_email_ed.php';
 
 mysqli_query($conn, "UPDATE inventaris SET status='Tersedia' WHERE status IS NULL OR status='' ");
 $setting = mysqli_fetch_assoc(mysqli_query($conn, 'SELECT stok_min, ed_alert FROM setting_profile WHERE id=1')) ?: [];
